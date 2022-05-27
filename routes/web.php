@@ -28,10 +28,16 @@ Route::group(['middleware' => 'auth' ],function(){
 
 require __DIR__.'/auth.php';
 
+Route::group(['middleware' => 'auth:admin'],function(){
+    Route::prefix('admin')->group(function () {
+        Route::get('/dashboard', function () {            
+                return view('admin.dashboard');
+        })->name('admin.dashboard');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['auth:admin'])->name('admin.dashboard');
+        Route::view('profile','admin.profile')->name('admin.profile');
+        Route::put('profile',[\App\Http\Controllers\ProfileController::class,'update'])->name('admin.profile.update');
+    });    
+});
 
 require __DIR__.'/adminauth.php';
 
